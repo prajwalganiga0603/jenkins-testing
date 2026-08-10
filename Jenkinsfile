@@ -4,6 +4,8 @@ pipeline {
     environment {
         // Define environment variables to be used throughout the pipeline
         DOCKER_IMAGE = 'prajwalganiga/first-app:latest'
+        // Connect to Docker Desktop via TCP to bypass Windows Service named pipe restrictions
+        DOCKER_HOST = 'tcp://localhost:2375'
     }
 
     stages {
