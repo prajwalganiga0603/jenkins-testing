@@ -1,534 +1,681 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Prajwal — Digital Builder</title>
-<style>
-  * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #d2d2d0;
-    color: #111;
-  }
-
-  .page {
-    width: min(94vw, 1420px);
-    min-height: 94vh;
-    margin: 3vh auto;
-    background: #efefed;
-    border: 1px solid #c4c4c1;
-    box-shadow: 0 10px 35px rgba(0,0,0,.12);
-    overflow: hidden;
-    position: relative;
-  }
-
-  header {
-    height: 76px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 28px;
-    position: relative;
-    z-index: 10;
-  }
-
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 15px;
-  }
-
-  .brand-mark {
-    width: 21px;
-    height: 21px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2px;
-  }
-  .brand-mark span {
-    background: #ff6b00;
-    border-radius: 2px;
-  }
-
-  nav {
-    display: flex;
-    gap: 4px;
-    padding: 5px;
-    background: #d7d7d5;
-    border-radius: 10px;
-    box-shadow: inset 0 1px 2px rgba(0,0,0,.12);
-  }
-  nav a {
-    text-decoration: none;
-    color: #555;
-    font-size: 12px;
-    padding: 10px 14px;
-    border-radius: 7px;
-  }
-  nav a:hover, nav a.active {
-    color: #111;
-    background: #f1f1ef;
-  }
-
-  .contact {
-    background: #050505;
-    color: white;
-    border: 0;
-    border-radius: 6px;
-    padding: 12px 20px;
-    cursor: pointer;
-    font-size: 12px;
-  }
-
-  .hero {
-    min-height: calc(94vh - 76px);
-    position: relative;
-    padding: 20px 42px 55px;
-    display: grid;
-    grid-template-columns: 1fr 1.15fr 1fr;
-    align-items: center;
-  }
-
-  .hero-copy { position: relative; z-index: 4; }
-  .counter {
-    font-size: 11px;
-    letter-spacing: 1px;
-    margin-bottom: 28px;
-  }
-  h1 {
-    font-size: clamp(45px, 5.1vw, 80px);
-    line-height: .91;
-    letter-spacing: -4px;
-    margin: 0;
-    font-weight: 500;
-    max-width: 560px;
-  }
-  .accent { color: #ff6b00; }
-  .intro {
-    max-width: 390px;
-    font-size: 13px;
-    line-height: 1.6;
-    color: #555;
-    margin: 28px 0 22px;
-  }
-  .buttons { display: flex; gap: 14px; }
-  .btn {
-    display: inline-block;
-    text-decoration: none;
-    font-size: 12px;
-    padding: 12px 23px;
-    border-radius: 5px;
-  }
-  .btn.primary { background: #ff6b00; color: white; }
-  .btn.secondary { background: #ccc; color: #333; }
-
-  /* Central abstract "digital machine" */
-  .visual {
-    height: 510px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .glow {
-    position: absolute;
-    width: 330px;
-    height: 330px;
-    background: radial-gradient(circle, rgba(255,107,0,.20), transparent 68%);
-    filter: blur(10px);
-  }
-  .device {
-    width: 330px;
-    height: 245px;
-    background: linear-gradient(145deg, #ff8a00, #ef4f00);
-    border-radius: 26px 26px 38px 38px;
-    transform: rotate(-7deg) perspective(600px) rotateX(5deg);
-    box-shadow: 22px 25px 0 #d8d8d5, 0 28px 45px rgba(0,0,0,.22);
-    position: relative;
-    z-index: 2;
-  }
-  .screen {
-    position: absolute;
-    width: 245px;
-    height: 155px;
-    left: 42px;
-    top: -73px;
-    border: 12px solid #ff7a00;
-    border-bottom-width: 16px;
-    border-radius: 18px 18px 8px 8px;
-    background: #202020;
-    transform: rotateX(-4deg);
-    box-shadow: inset 0 0 0 3px #111, 0 9px 0 rgba(0,0,0,.18);
-    padding: 17px;
-  }
-  .screen-ui {
-    height: 100%;
-    background: #f2f2ed;
-    border-radius: 2px;
-    padding: 13px;
-    font-family: monospace;
-    font-size: 8px;
-    color: #333;
-  }
-  .screen-ui b { font-size: 12px; }
-  .line { height: 5px; background: #bbb; margin: 7px 0; width: 80%; }
-  .line.short { width: 48%; }
-  .line.orange { width: 65%; background: #ff6b00; }
-
-  .keys {
-    position: absolute;
-    left: 47px;
-    bottom: 28px;
-    width: 235px;
-    height: 58px;
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    gap: 4px;
-    transform: skewX(-8deg);
-  }
-  .keys span {
-    background: #f2f2ed;
-    border-radius: 3px;
-    box-shadow: 0 2px 1px rgba(0,0,0,.25);
-  }
-
-  .floating {
-    position: absolute;
-    z-index: 5;
-    background: #f5f5f2;
-    box-shadow: 0 9px 20px rgba(0,0,0,.13);
-    border: 1px solid #ddd;
-  }
-  .chip {
-    width: 62px; height: 62px;
-    top: 72px; left: 8%;
-    border-radius: 10px;
-    transform: rotate(-12deg);
-    display: grid;
-    place-items: center;
-    color: #ff6b00;
-    font-size: 28px;
-  }
-  .terminal {
-    width: 86px; height: 70px;
-    bottom: 70px; right: 4%;
-    border-radius: 12px;
-    transform: rotate(8deg);
-    padding: 12px;
-    font-family: monospace;
-    font-size: 8px;
-  }
-  .terminal strong { color: #ff6b00; }
-
-  .stats {
-    align-self: start;
-    padding-top: 65px;
-    text-align: right;
-    position: relative;
-    z-index: 4;
-  }
-  .stat-number {
-    font-size: clamp(46px, 5vw, 72px);
-    letter-spacing: -4px;
-    font-weight: 600;
-  }
-  .stat-label {
-    font-size: 13px;
-    color: #555;
-    line-height: 1.5;
-    max-width: 270px;
-    margin-left: auto;
-  }
-  .mini-links {
-    margin-top: 100px;
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    align-items: flex-end;
-  }
-  .mini-links a {
-    color: #555;
-    text-decoration: none;
-    font-size: 11px;
-  }
-  .mini-links a:hover { color: #ff6b00; }
-
-  .marquee {
-    position: absolute;
-    bottom: 8px;
-    left: -10px;
-    width: 110%;
-    overflow: hidden;
-    white-space: nowrap;
-    pointer-events: none;
-  }
-  .marquee span {
-    display: inline-block;
-    font-size: clamp(70px, 10vw, 150px);
-    line-height: .75;
-    font-weight: 800;
-    color: transparent;
-    -webkit-text-stroke: 2px rgba(0,0,0,.12);
-    animation: slide 22s linear infinite;
-  }
-  @keyframes slide {
-    from { transform: translateX(0); }
-    to { transform: translateX(-30%); }
-  }
-
-  .scroll {
-    position: absolute;
-    bottom: 4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 150px;
-    height: 45px;
-    background: #d0d0cd;
-    border-radius: 80px 80px 0 0;
-    text-align: center;
-    padding-top: 8px;
-    font-size: 10px;
-    color: #777;
-    z-index: 8;
-  }
-
-  .section {
-    padding: 100px 55px;
-    background: #111;
-    color: #eee;
-  }
-  .section h2 {
-    font-size: clamp(40px, 6vw, 82px);
-    letter-spacing: -4px;
-    font-weight: 500;
-    margin: 0 0 55px;
-  }
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-  }
-  .card {
-    border: 1px solid #333;
-    padding: 28px;
-    min-height: 230px;
-    transition: transform .25s, background .25s;
-  }
-  .card:hover { transform: translateY(-6px); background: #191919; }
-  .card .num { color: #ff6b00; font-size: 12px; }
-  .card h3 { font-size: 25px; font-weight: 500; margin: 28px 0 14px; }
-  .card p { color: #999; font-size: 13px; line-height: 1.7; }
-
-  footer {
-    padding: 35px 55px;
-    background: #111;
-    border-top: 1px solid #333;
-    display: flex;
-    justify-content: space-between;
-    color: #777;
-    font-size: 11px;
-  }
-
-  @media (max-width: 950px) {
-    nav { display: none; }
-    .hero {
-      grid-template-columns: 1fr;
-      padding: 35px 28px 70px;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prajwal — Digital Builder</title>
+  <style>
+    * {
+      box-sizing: border-box;
     }
-    .hero-copy { text-align: left; }
-    .visual { height: 430px; margin-top: 40px; }
-    .stats { text-align: left; padding-top: 0; }
-    .stat-label { margin-left: 0; }
-    .mini-links { align-items: flex-start; margin-top: 35px; }
-    .marquee { bottom: 0; }
-    .cards { grid-template-columns: 1fr; }
-    .section { padding: 75px 28px; }
-    footer { padding: 28px; flex-direction: column; gap: 10px; }
-  }
-</style>
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #d2d2d0;
+      color: #111;
+    }
+
+    .page {
+      width: min(94vw, 1420px);
+      min-height: 94vh;
+      margin: 3vh auto;
+      background: #efefed;
+      border: 1px solid #c4c4c1;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, .12);
+      overflow: hidden;
+      position: relative;
+    }
+
+    header {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .brand-mark {
+      width: 21px;
+      height: 21px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .brand-mark span {
+      background: #ff6b00;
+      border-radius: 2px;
+    }
+
+    nav {
+      display: flex;
+      gap: 4px;
+      padding: 5px;
+      background: #d7d7d5;
+      border-radius: 10px;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, .12);
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #555;
+      font-size: 12px;
+      padding: 10px 14px;
+      border-radius: 7px;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: #111;
+      background: #f1f1ef;
+    }
+
+    .contact {
+      background: #050505;
+      color: white;
+      border: 0;
+      border-radius: 6px;
+      padding: 12px 20px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .hero {
+      min-height: calc(94vh - 76px);
+      position: relative;
+      padding: 20px 42px 55px;
+      display: grid;
+      grid-template-columns: 1fr 1.15fr 1fr;
+      align-items: center;
+    }
+
+    .hero-copy {
+      position: relative;
+      z-index: 4;
+    }
+
+    .counter {
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      font-size: clamp(45px, 5.1vw, 80px);
+      line-height: .91;
+      letter-spacing: -4px;
+      margin: 0;
+      font-weight: 500;
+      max-width: 560px;
+    }
+
+    .accent {
+      color: #ff6b00;
+    }
+
+    .intro {
+      max-width: 390px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #555;
+      margin: 28px 0 22px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 14px;
+    }
+
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      font-size: 12px;
+      padding: 12px 23px;
+      border-radius: 5px;
+    }
+
+    .btn.primary {
+      background: #ff6b00;
+      color: white;
+    }
+
+    .btn.secondary {
+      background: #ccc;
+      color: #333;
+    }
+
+    /* Central abstract "digital machine" */
+    .visual {
+      height: 510px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .glow {
+      position: absolute;
+      width: 330px;
+      height: 330px;
+      background: radial-gradient(circle, rgba(255, 107, 0, .20), transparent 68%);
+      filter: blur(10px);
+    }
+
+    .device {
+      width: 330px;
+      height: 245px;
+      background: linear-gradient(145deg, #ff8a00, #ef4f00);
+      border-radius: 26px 26px 38px 38px;
+      transform: rotate(-7deg) perspective(600px) rotateX(5deg);
+      box-shadow: 22px 25px 0 #d8d8d5, 0 28px 45px rgba(0, 0, 0, .22);
+      position: relative;
+      z-index: 2;
+    }
+
+    .screen {
+      position: absolute;
+      width: 245px;
+      height: 155px;
+      left: 42px;
+      top: -73px;
+      border: 12px solid #ff7a00;
+      border-bottom-width: 16px;
+      border-radius: 18px 18px 8px 8px;
+      background: #202020;
+      transform: rotateX(-4deg);
+      box-shadow: inset 0 0 0 3px #111, 0 9px 0 rgba(0, 0, 0, .18);
+      padding: 17px;
+    }
+
+    .screen-ui {
+      height: 100%;
+      background: #f2f2ed;
+      border-radius: 2px;
+      padding: 13px;
+      font-family: monospace;
+      font-size: 8px;
+      color: #333;
+    }
+
+    .screen-ui b {
+      font-size: 12px;
+    }
+
+    .line {
+      height: 5px;
+      background: #bbb;
+      margin: 7px 0;
+      width: 80%;
+    }
+
+    .line.short {
+      width: 48%;
+    }
+
+    .line.orange {
+      width: 65%;
+      background: #ff6b00;
+    }
+
+    .keys {
+      position: absolute;
+      left: 47px;
+      bottom: 28px;
+      width: 235px;
+      height: 58px;
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 4px;
+      transform: skewX(-8deg);
+    }
+
+    .keys span {
+      background: #f2f2ed;
+      border-radius: 3px;
+      box-shadow: 0 2px 1px rgba(0, 0, 0, .25);
+    }
+
+    .floating {
+      position: absolute;
+      z-index: 5;
+      background: #f5f5f2;
+      box-shadow: 0 9px 20px rgba(0, 0, 0, .13);
+      border: 1px solid #ddd;
+    }
+
+    .chip {
+      width: 62px;
+      height: 62px;
+      top: 72px;
+      left: 8%;
+      border-radius: 10px;
+      transform: rotate(-12deg);
+      display: grid;
+      place-items: center;
+      color: #ff6b00;
+      font-size: 28px;
+    }
+
+    .terminal {
+      width: 86px;
+      height: 70px;
+      bottom: 70px;
+      right: 4%;
+      border-radius: 12px;
+      transform: rotate(8deg);
+      padding: 12px;
+      font-family: monospace;
+      font-size: 8px;
+    }
+
+    .terminal strong {
+      color: #ff6b00;
+    }
+
+    .stats {
+      align-self: start;
+      padding-top: 65px;
+      text-align: right;
+      position: relative;
+      z-index: 4;
+    }
+
+    .stat-number {
+      font-size: clamp(46px, 5vw, 72px);
+      letter-spacing: -4px;
+      font-weight: 600;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+      max-width: 270px;
+      margin-left: auto;
+    }
+
+    .mini-links {
+      margin-top: 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      align-items: flex-end;
+    }
+
+    .mini-links a {
+      color: #555;
+      text-decoration: none;
+      font-size: 11px;
+    }
+
+    .mini-links a:hover {
+      color: #ff6b00;
+    }
+
+    .marquee {
+      position: absolute;
+      bottom: 8px;
+      left: -10px;
+      width: 110%;
+      overflow: hidden;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    .marquee span {
+      display: inline-block;
+      font-size: clamp(70px, 10vw, 150px);
+      line-height: .75;
+      font-weight: 800;
+      color: transparent;
+      -webkit-text-stroke: 2px rgba(0, 0, 0, .12);
+      animation: slide 22s linear infinite;
+    }
+
+    @keyframes slide {
+      from {
+        transform: translateX(0);
+      }
+
+      to {
+        transform: translateX(-30%);
+      }
+    }
+
+    .scroll {
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 150px;
+      height: 45px;
+      background: #d0d0cd;
+      border-radius: 80px 80px 0 0;
+      text-align: center;
+      padding-top: 8px;
+      font-size: 10px;
+      color: #777;
+      z-index: 8;
+    }
+
+    .section {
+      padding: 100px 55px;
+      background: #111;
+      color: #eee;
+    }
+
+    .section h2 {
+      font-size: clamp(40px, 6vw, 82px);
+      letter-spacing: -4px;
+      font-weight: 500;
+      margin: 0 0 55px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      border: 1px solid #333;
+      padding: 28px;
+      min-height: 230px;
+      transition: transform .25s, background .25s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      background: #191919;
+    }
+
+    .card .num {
+      color: #ff6b00;
+      font-size: 12px;
+    }
+
+    .card h3 {
+      font-size: 25px;
+      font-weight: 500;
+      margin: 28px 0 14px;
+    }
+
+    .card p {
+      color: #999;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    footer {
+      padding: 35px 55px;
+      background: #111;
+      border-top: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      color: #777;
+      font-size: 11px;
+    }
+
+    @media (max-width: 950px) {
+      nav {
+        display: none;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        padding: 35px 28px 70px;
+      }
+
+      .hero-copy {
+        text-align: left;
+      }
+
+      .visual {
+        height: 430px;
+        margin-top: 40px;
+      }
+
+      .stats {
+        text-align: left;
+        padding-top: 0;
+      }
+
+      .stat-label {
+        margin-left: 0;
+      }
+
+      .mini-links {
+        align-items: flex-start;
+        margin-top: 35px;
+      }
+
+      .marquee {
+        bottom: 0;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .section {
+        padding: 75px 28px;
+      }
+
+      footer {
+        padding: 28px;
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="page">
-  <header>
-    <div class="brand">
-      <div class="brand-mark">
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
-        <span></span><span></span><span></span>
+  <div class="page">
+    <header>
+      <div class="brand">
+        <div class="brand-mark">
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+          <span></span><span></span><span></span>
+        </div>
+        Prajwal Ganiga
       </div>
-      Prajwal
-    </div>
 
-    <nav>
-      <a class="active" href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#work">Work</a>
-      <a href="#skills">Skills</a>
-      <a href="#contact">Contact</a>
-    </nav>
+      <nav>
+        <a class="active" href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#work">Work</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </nav>
 
-    <a class="contact" href="mailto:hello@example.com">Let's Talk</a>
-  </header>
+      <a class="contact" href="mailto:hello@example.com">Let's Talk</a>
+    </header>
 
-  <main id="home" class="hero">
-    <div class="hero-copy">
-      <div class="counter">[ 01 / 04 ]</div>
-      <h1>BUILDING<br>SMART<br><span class="accent">DIGITAL</span><br>EXPERIENCES</h1>
-      <p class="intro">
-        I build practical AI-powered products, full-stack applications and
-        developer-focused experiences — turning complex technology into
-        useful, polished software.
-      </p>
-      <div class="buttons">
-        <a class="btn primary" href="#work">View Work</a>
-        <a class="btn secondary" href="#about">About Me</a>
+    <main id="home" class="hero">
+      <div class="hero-copy">
+        <div class="counter">[ 01 / 04 ]</div>
+        <h1>BUILDING<br>SMART<br><span class="accent">DIGITAL</span><br>EXPERIENCES</h1>
+        <p class="intro">
+          I build practical AI-powered products, full-stack applications and
+          developer-focused experiences — turning complex technology into
+          useful, polished software.
+        </p>
+        <div class="buttons">
+          <a class="btn primary" href="#work">View Work</a>
+          <a class="btn secondary" href="#about">About Me</a>
+        </div>
       </div>
-    </div>
 
-    <div class="visual">
-      <div class="glow"></div>
-      <div class="floating chip">&lt;/&gt;</div>
-      <div class="device">
-        <div class="screen">
-          <div class="screen-ui">
-            <b>AI / BUILD</b>
-            <div class="line orange"></div>
-            <div class="line"></div>
-            <div class="line short"></div>
-            <div class="line"></div>
-            <div class="line orange"></div>
+      <div class="visual">
+        <div class="glow"></div>
+        <div class="floating chip">&lt;/&gt;</div>
+        <div class="device">
+          <div class="screen">
+            <div class="screen-ui">
+              <b>AI / BUILD</b>
+              <div class="line orange"></div>
+              <div class="line"></div>
+              <div class="line short"></div>
+              <div class="line"></div>
+              <div class="line orange"></div>
+            </div>
+          </div>
+          <div class="keys">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
           </div>
         </div>
-        <div class="keys">
-          <span></span><span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span><span></span>
+        <div class="floating terminal">
+          <strong>$ build</strong><br><br>
+          AI ready...<br>
+          API online...<br>
+          deploy ✓
         </div>
       </div>
-      <div class="floating terminal">
-        <strong>$ build</strong><br><br>
-        AI ready...<br>
-        API online...<br>
-        deploy ✓
+
+      <aside class="stats">
+        <div class="stat-number">AI<span class="accent">+</span></div>
+        <div class="stat-label">
+          Machine learning, generative AI, APIs and product engineering
+          brought together into working applications.
+        </div>
+        <div class="mini-links">
+          <a href="#work">AI PRODUCTS ↗</a>
+          <a href="#work">FULL-STACK BUILDS ↗</a>
+          <a href="#skills">TECH STACK ↗</a>
+        </div>
+      </aside>
+
+      <div class="marquee"><span>BUILD • CREATE • SHIP • BUILD • CREATE • SHIP • </span></div>
+      <div class="scroll">↓<br>Scroll to explore</div>
+    </main>
+
+    <section id="about" class="section">
+      <h2>WHAT I<br>WORK ON</h2>
+      <div class="cards">
+        <article class="card">
+          <div class="num">01 — AI / ML</div>
+          <h3>Intelligent Products</h3>
+          <p>
+            Building applications around machine learning, deep learning,
+            computer vision, LLMs, RAG and practical AI workflows.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="num">02 — ENGINEERING</div>
+          <h3>Full-Stack Systems</h3>
+          <p>
+            FastAPI backends, databases, APIs, web interfaces and mobile
+            experiences designed as complete systems rather than isolated demos.
+          </p>
+        </article>
+
+        <article class="card">
+          <div class="num">03 — BUILDING</div>
+          <h3>Ideas → Products</h3>
+          <p>
+            From an initial concept to architecture, implementation and
+            deployment — with a focus on solving a real problem clearly.
+          </p>
+        </article>
       </div>
-    </div>
+    </section>
 
-    <aside class="stats">
-      <div class="stat-number">AI<span class="accent">+</span></div>
-      <div class="stat-label">
-        Machine learning, generative AI, APIs and product engineering
-        brought together into working applications.
+    <section id="work" class="section" style="background:#efefed;color:#111;">
+      <h2>SELECTED<br><span class="accent">BUILDS</span></h2>
+      <div class="cards">
+        <article class="card" style="border-color:#ccc;">
+          <div class="num">PROJECT 01</div>
+          <h3>MirrorMind</h3>
+          <p style="color:#666;">
+            A career-focused intelligent platform combining prediction,
+            student support and useful digital tools.
+          </p>
+        </article>
+        <article class="card" style="border-color:#ccc;">
+          <div class="num">PROJECT 02</div>
+          <h3>Doctor–Patient AI</h3>
+          <p style="color:#666;">
+            An AI-assisted communication platform exploring multilingual
+            interaction, sign-to-text, summaries and digital prescriptions.
+          </p>
+        </article>
+        <article class="card" style="border-color:#ccc;">
+          <div class="num">PROJECT 03</div>
+          <h3>CampusPulse</h3>
+          <p style="color:#666;">
+            A real-time campus help platform connecting requests, users and
+            live updates through a modern application architecture.
+          </p>
+        </article>
       </div>
-      <div class="mini-links">
-        <a href="#work">AI PRODUCTS ↗</a>
-        <a href="#work">FULL-STACK BUILDS ↗</a>
-        <a href="#skills">TECH STACK ↗</a>
+    </section>
+
+    <section id="skills" class="section">
+      <h2>THE<br>TOOLKIT</h2>
+      <div class="cards">
+        <article class="card">
+          <div class="num">AI</div>
+          <h3>Python · TensorFlow · PyTorch</h3>
+          <p>Deep learning, computer vision, transformers and model workflows.</p>
+        </article>
+        <article class="card">
+          <div class="num">GENAI</div>
+          <h3>LLMs · RAG · LangChain</h3>
+          <p>Prompt engineering, embeddings, vector databases and AI application pipelines.</p>
+        </article>
+        <article class="card">
+          <div class="num">BACKEND</div>
+          <h3>FastAPI · MongoDB · REST</h3>
+          <p>Clean APIs, authentication, data models and production-oriented backend systems.</p>
+        </article>
       </div>
-    </aside>
+    </section>
 
-    <div class="marquee"><span>BUILD • CREATE • SHIP • BUILD • CREATE • SHIP • </span></div>
-    <div class="scroll">↓<br>Scroll to explore</div>
-  </main>
+    <footer id="contact">
+      <span>© Prajwal — Built with curiosity.</span>
+      <span>AI · Engineering · Product</span>
+    </footer>
+  </div>
 
-  <section id="about" class="section">
-    <h2>WHAT I<br>WORK ON</h2>
-    <div class="cards">
-      <article class="card">
-        <div class="num">01 — AI / ML</div>
-        <h3>Intelligent Products</h3>
-        <p>
-          Building applications around machine learning, deep learning,
-          computer vision, LLMs, RAG and practical AI workflows.
-        </p>
-      </article>
+  <script>
+    // Small interaction: highlight the current navigation item.
+    const links = document.querySelectorAll('nav a');
+    const sections = [...document.querySelectorAll('main, section')];
 
-      <article class="card">
-        <div class="num">02 — ENGINEERING</div>
-        <h3>Full-Stack Systems</h3>
-        <p>
-          FastAPI backends, databases, APIs, web interfaces and mobile
-          experiences designed as complete systems rather than isolated demos.
-        </p>
-      </article>
-
-      <article class="card">
-        <div class="num">03 — BUILDING</div>
-        <h3>Ideas → Products</h3>
-        <p>
-          From an initial concept to architecture, implementation and
-          deployment — with a focus on solving a real problem clearly.
-        </p>
-      </article>
-    </div>
-  </section>
-
-  <section id="work" class="section" style="background:#efefed;color:#111;">
-    <h2>SELECTED<br><span class="accent">BUILDS</span></h2>
-    <div class="cards">
-      <article class="card" style="border-color:#ccc;">
-        <div class="num">PROJECT 01</div>
-        <h3>MirrorMind</h3>
-        <p style="color:#666;">
-          A career-focused intelligent platform combining prediction,
-          student support and useful digital tools.
-        </p>
-      </article>
-      <article class="card" style="border-color:#ccc;">
-        <div class="num">PROJECT 02</div>
-        <h3>Doctor–Patient AI</h3>
-        <p style="color:#666;">
-          An AI-assisted communication platform exploring multilingual
-          interaction, sign-to-text, summaries and digital prescriptions.
-        </p>
-      </article>
-      <article class="card" style="border-color:#ccc;">
-        <div class="num">PROJECT 03</div>
-        <h3>CampusPulse</h3>
-        <p style="color:#666;">
-          A real-time campus help platform connecting requests, users and
-          live updates through a modern application architecture.
-        </p>
-      </article>
-    </div>
-  </section>
-
-  <section id="skills" class="section">
-    <h2>THE<br>TOOLKIT</h2>
-    <div class="cards">
-      <article class="card"><div class="num">AI</div><h3>Python · TensorFlow · PyTorch</h3><p>Deep learning, computer vision, transformers and model workflows.</p></article>
-      <article class="card"><div class="num">GENAI</div><h3>LLMs · RAG · LangChain</h3><p>Prompt engineering, embeddings, vector databases and AI application pipelines.</p></article>
-      <article class="card"><div class="num">BACKEND</div><h3>FastAPI · MongoDB · REST</h3><p>Clean APIs, authentication, data models and production-oriented backend systems.</p></article>
-    </div>
-  </section>
-
-  <footer id="contact">
-    <span>© Prajwal — Built with curiosity.</span>
-    <span>AI · Engineering · Product</span>
-  </footer>
-</div>
-
-<script>
-  // Small interaction: highlight the current navigation item.
-  const links = document.querySelectorAll('nav a');
-  const sections = [...document.querySelectorAll('main, section')];
-
-  window.addEventListener('scroll', () => {
-    let current = 'home';
-    sections.forEach(section => {
-      if (window.scrollY >= section.offsetTop - 160) current = section.id;
+    window.addEventListener('scroll', () => {
+      let current = 'home';
+      sections.forEach(section => {
+        if (window.scrollY >= section.offsetTop - 160) current = section.id;
+      });
+      links.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+      });
     });
-    links.forEach(link => {
-      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
-    });
-  });
-</script>
+  </script>
 
 </body>
+
 </html>
