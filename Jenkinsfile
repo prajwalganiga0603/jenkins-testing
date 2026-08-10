@@ -9,8 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // In a real scenario, this would be `checkout scm` or `git clone`
-                echo 'Checking out code from repository...'
+                git branch: 'main', url: 'https://github.com/prajwalganiga0603/jenkins-testing.git'
             }
         }
 
