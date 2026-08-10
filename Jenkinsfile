@@ -17,8 +17,8 @@ pipeline {
             steps {
                 echo 'Checking project dependencies...'
                 // Since this is a simple HTML site, we'll verify the main file exists
-                // If using Windows native Jenkins, you might need to change 'sh' to 'bat'
-                sh 'test -f index.html || echo "index.html exists"'
+                // Using 'bat' for Windows native Jenkins
+                bat 'if exist index.html echo index.html exists'
                 echo 'Dependency check passed.'
             }
         }
@@ -34,8 +34,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image for the web application...'
-                sh 'docker-compose build'
-                // Alternatively: sh "docker build -t ${DOCKER_IMAGE} ."
+                bat 'docker-compose build'
+                // Alternatively: bat "docker build -t ${DOCKER_IMAGE} ."
             }
         }
         
@@ -59,8 +59,8 @@ pipeline {
             steps {
                 echo 'Deploying the application...'
                 // Bring up the container using docker-compose
-                sh 'docker-compose down' // Stop any existing container
-                sh 'docker-compose up -d'
+                bat 'docker-compose down' // Stop any existing container
+                bat 'docker-compose up -d'
                 echo 'Application deployed and is now ready on port 8000!'
             }
         }
